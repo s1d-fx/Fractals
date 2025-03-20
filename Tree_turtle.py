@@ -1,5 +1,6 @@
 from turtle import *
 
+shape("turtle")
 speed(0)
 
 def tree(size, levels, angle):
