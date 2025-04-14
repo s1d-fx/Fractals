@@ -11,6 +11,7 @@ y = np.linspace(0, 1, rows)
 xx, yy = np.meshgrid(x, y)
 base_points = np.column_stack([xx.ravel(), yy.ravel()])
 
+
 # --- Create a dense cluster of points near a random center location ---
 cx, cy = np.random.uniform(0.3, 0.7, 2)
 cluster_size = 40
@@ -30,6 +31,7 @@ cluster = cluster[(cluster[:, 0] >= 0) & (cluster[:, 0] <= 1) &
 all_points = np.vstack([base_points, cluster])
 x, y = all_points[:, 0], all_points[:, 1]
 triang = Triangulation(x, y)
+
 
 # --- Zoom settings ---
 zoom_x = 0.1
@@ -60,7 +62,7 @@ triang.set_mask(mask)
 # --- Create random colored transparent triangle patches ---
 num_regions = 5
 region_size = 200
-colors = [
+colours = [
     to_rgba('cyan', 0.2),
     to_rgba('magenta', 0.2),
     to_rgba('lime', 0.2),
@@ -68,24 +70,25 @@ colors = [
     to_rgba('deeppink', 0.2),
 ]
 
-valid_tris = triang.triangles[~np.array(triang.mask)]
-np.random.shuffle(valid_tris)
+valid_triangles = triang.triangles[~np.array(triang.mask)]
+np.random.shuffle(valid_triangles)
 colored_regions = [
-    valid_tris[i * region_size: (i + 1) * region_size]
-    for i in range(min(num_regions, len(valid_tris) // region_size))
+    valid_triangles[i * region_size: (i + 1) * region_size]
+    for i in range(min(num_regions, len(valid_triangles) // region_size))
 ]
 
 patches = []
-for region_tris, color in zip(colored_regions, colors):
+for region_triangless, colour in zip(colored_regions, colours):
     triangles = [
         [(x[i], y[i]) for i in tri]
-        for tri in region_tris
+        for tri in region_triangless
     ]
-    coll = mcoll.PolyCollection(triangles, facecolors=[color], edgecolors='none')
+    coll = mcoll.PolyCollection(triangles, facecolors=[colour], edgecolors='none')
     patches.append(coll)
 
+
 # --- Plot it all ---
-fig, ax = plt.subplots(figsize=(6, 6), facecolor='black', dpi=125)
+fig, ax = plt.subplots(figsize=(4, 4), facecolor='black', dpi=300)
 ax.set_aspect('equal')
 ax.axis('off')
 ax.set_facecolor('black')
@@ -101,6 +104,6 @@ ax.triplot(triang, color='white', linewidth=0.3)
 ax.set_xlim(x_min, x_max)
 ax.set_ylim(y_min, y_max)
 
-# Save and show
-plt.savefig('weighted_mesh.png', dpi=300, bbox_inches='tight', pad_inches=0, facecolor='black')
+# Save/show
+# plt.savefig('stage_1.png', dpi=300, bbox_inches='tight', pad_inches=0, facecolor='black')
 plt.show()
