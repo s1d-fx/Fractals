@@ -11,10 +11,9 @@ y = np.linspace(0, 1, rows)
 xx, yy = np.meshgrid(x, y)
 base_points = np.column_stack([xx.ravel(), yy.ravel()])
 
-
 # --- Create a dense cluster of points near a random center location ---
 cx, cy = np.random.uniform(0.3, 0.7, 2)
-cluster_size = 40
+cluster_size = 30
 jitter = 0.005
 cluster_x = np.linspace(cx - 0.07, cx + 0.07, cluster_size)
 cluster_y = np.linspace(cy - 0.07, cy + 0.07, cluster_size)
@@ -32,22 +31,12 @@ all_points = np.vstack([base_points, cluster])
 x, y = all_points[:, 0], all_points[:, 1]
 triang = Triangulation(x, y)
 
-
-# --- Zoom settings ---
-zoom_x = 0.1
-zoom_y = 0.1
-x_min, x_max = cx - zoom_x, cx + zoom_x
-y_min, y_max = cy - zoom_y, cy + zoom_y
-
-# --- Mask triangles that are outside zoom or have long edges ---
-max_edge_length = 0.02
-
+# --- Mask triangles that have long edges ---
+max_edge_length = 0.017
 mask = []
 for tri in triang.triangles:
     x_tri = x[tri]
     y_tri = y[tri]
-    outside = np.any((x_tri < x_min) | (x_tri > x_max) |
-                     (y_tri < y_min) | (y_tri > y_max))
     pts = np.column_stack((x_tri, y_tri))
     edge_lengths = [
         np.linalg.norm(pts[0] - pts[1]),
@@ -55,7 +44,7 @@ for tri in triang.triangles:
         np.linalg.norm(pts[2] - pts[0])
     ]
     too_long = any(edge > max_edge_length for edge in edge_lengths)
-    mask.append(outside or too_long)
+    mask.append(too_long)
 
 triang.set_mask(mask)
 
@@ -86,7 +75,6 @@ for region_triangless, colour in zip(colored_regions, colours):
     coll = mcoll.PolyCollection(triangles, facecolors=[colour], edgecolors='none')
     patches.append(coll)
 
-
 # --- Plot it all ---
 fig, ax = plt.subplots(figsize=(4, 4), facecolor='black', dpi=300)
 ax.set_aspect('equal')
@@ -100,10 +88,5 @@ for coll in patches:
 # Draw white wireframe on top
 ax.triplot(triang, color='white', linewidth=0.3)
 
-# Zoom view
-ax.set_xlim(x_min, x_max)
-ax.set_ylim(y_min, y_max)
-
-# Save/show
-# plt.savefig('stage_1.png', dpi=300, bbox_inches='tight', pad_inches=0, facecolor='black')
+# Show the plot 
 plt.show()
