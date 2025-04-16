@@ -13,7 +13,7 @@ base_points = np.column_stack([xx.ravel(), yy.ravel()])
 
 # --- Create a dense cluster of points near a random center location ---
 cx, cy = np.random.uniform(0.3, 0.7, 2)
-cluster_size = 40
+cluster_size = 30
 jitter = 0.005
 cluster_x = np.linspace(cx - 0.07, cx + 0.07, cluster_size)
 cluster_y = np.linspace(cy - 0.07, cy + 0.07, cluster_size)
@@ -32,7 +32,7 @@ x, y = all_points[:, 0], all_points[:, 1]
 triang = Triangulation(x, y)
 
 # --- Mask triangles that have long edges ---
-max_edge_length = 0.015
+max_edge_length = 0.02
 mask = []
 for tri in triang.triangles:
     x_tri = x[tri]
@@ -77,7 +77,7 @@ for region_triangless, colour in zip(colored_regions, colours):
     patches.append(coll)
 
 # --- Plot it all ---
-fig, ax = plt.subplots(figsize=(4, 4), facecolor='black', dpi=300)
+fig, ax = plt.subplots(figsize=(3, 3), facecolor='black', dpi=300)
 ax.set_aspect('equal')
 ax.axis('off')
 ax.set_facecolor('black')
