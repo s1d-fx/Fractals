@@ -35,10 +35,14 @@ def koch_snowflake(order, scale=10):
 
     return np.array(points)
 
-line_col = ((240/255), (224/255), (191/255))
-fill_col = ((240/255), (224/255), (191/255))
+# line_col = ((240/255), (224/255), (191/255)) # beige 1
+# line_col = ((209/255), (187/255), (143/255)) # beige 2
+line_col = ((232/255), (210/255), (171/255)) # beige 3
+# line_col = ((114/255), (138/255), (141/255)) # blue 1
+# line_col = ((114/255), (113/255), (100/255)) # brown 1
+fill_col = ((114/255), (138/255), (141/255))
 
-def draw_recursive_snowflakes(order=3, scale=10, depth=3, scale_factor=0.9, center=None, linewidth=4, fill_color=None):
+def draw_recursive_snowflakes(order=3, scale=10, depth=3, scale_factor=0.9, center=None, linewidth=4, fill_colour=None):
     # Generate the current snowflake
     points = koch_snowflake(order=order, scale=scale)
 
@@ -56,22 +60,22 @@ def draw_recursive_snowflakes(order=3, scale=10, depth=3, scale_factor=0.9, cent
     points_translated = points + translation
 
     # Fill the current snowflake if fill_color is provided
-    if fill_color is not None:
-        plt.fill(points_translated[:, 0], points_translated[:, 1], color=fill_color, linewidth=0)
+    if fill_colour is not None:
+        plt.fill(points_translated[:, 0], points_translated[:, 1], color=fill_colour, linewidth=0)
 
     # Plot the current snowflake
     plt.plot(points_translated[:, 0], points_translated[:, 1], color=line_col, linewidth=linewidth)
 
     # Recursive call for next smaller snowflake with reduced linewidth
     if depth > 1:
-        draw_recursive_snowflakes(order, scale * scale_factor, depth - 1, scale_factor, center=center, linewidth=linewidth * 0.8, fill_color=fill_color)
+        draw_recursive_snowflakes(order, scale * scale_factor, depth - 1, scale_factor, center=center, linewidth=linewidth * 0.8, fill_colour=fill_colour)
 
 # Save/show the plot
 plt.figure(figsize=(6, 6))
-# draw_recursive_snowflakes(order=3, scale=10, depth=100, scale_factor=0.99) Fade
-draw_recursive_snowflakes(order=2, scale=10, depth=1, scale_factor=0.75, fill_color=(fill_col))
+draw_recursive_snowflakes(order=2, scale=10, depth=1, scale_factor=0.99, fill_colour=(fill_col)) # Fade
+# draw_recursive_snowflakes(order=2, scale=10, depth=1, scale_factor=0.75, fill_colour=None)# (fill_col))
 plt.axis('equal')
 plt.axis('off')
 
-plt.savefig("Dev 3 (New)/snowflake_6.png", dpi=300, bbox_inches='tight', transparent=True)
+plt.savefig("snowflake_8.png", dpi=300, bbox_inches='tight', transparent=True)
 plt.show()

@@ -36,7 +36,7 @@ def koch_snowflake(order, scale=10):
     return np.array(points)
 
 # Set the outline color here
-col = ((100/255), (100/255), (100/255))
+col = ((50/255), (50/255), (50/255))
 
 # Generate the snowflake
 points = koch_snowflake(order=3, scale=10)
@@ -46,5 +46,5 @@ plt.figure(figsize=(6, 6))
 plt.plot(points[:, 0], points[:, 1], color=col, linewidth=2)
 plt.axis('equal')
 plt.axis('off')
-plt.savefig("Dev 3 (New)/simple_snowflake.png", dpi=300, bbox_inches='tight', transparent=True)
+plt.savefig("stage_1.png", dpi=300, bbox_inches='tight', transparent=True)
 plt.show()
