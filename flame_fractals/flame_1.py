@@ -12,44 +12,43 @@ y_vals = []
 # Start at origin
 x, y = 0.0, 0.0
 
-# Flame-style transformations (edited for stability)
-def transform_1(x, y):
-    r = math.sqrt(x**2 + y**2) + 1e-6
-    theta = math.atan2(y, x)
-    new_x = math.sin(theta * r) / r
-    new_y = math.cos(theta * r) / r
-    return 0.7 * new_x, 0.7 * new_y
+# Define IFS functions (Iterated Function System)
+def func_1(x, y):
+    # Sinusoidal variation
+    return math.sin(x), math.sin(y)
 
-def transform_2(x, y):
-    new_x = math.sin(x) + 0.5 * math.sin(y)
-    new_y = math.cos(y) - 0.5 * math.cos(x)
-    return 0.5 * new_x, 0.5 * new_y
+def func_2(x, y):
+    # Linear contraction + rotation
+    r = 0.5
+    theta = math.radians(30)
+    nx = r * (x * math.cos(theta) - y * math.sin(theta))
+    ny = r * (x * math.sin(theta) + y * math.cos(theta))
+    return nx, ny
 
-def transform_3(x, y):
-    angle = math.radians(45)
-    scale = 0.85
-    new_x = scale * (math.cos(angle) * x - math.sin(angle) * y) + 0.2
-    new_y = scale * (math.sin(angle) * x + math.cos(angle) * y)
-    return new_x, new_y
+def func_3(x, y):
+    # Another affine transform
+    return 0.5 * x + 0.5, 0.5 * y + 0.5
 
 # Generate points
-for _ in range(n):
+for i in range(n + 20):
     r = random.random()
-    if r < 0.4:
-        x, y = transform_1(x, y)
-    elif r < 0.7:
-        x, y = transform_2(x, y)
+    if r < 0.33:
+        x, y = func_1(x, y)
+    elif r < 0.66:
+        x, y = func_2(x, y)
     else:
-        x, y = transform_3(x, y)
+        x, y = func_3(x, y)
 
-    x_vals.append(x)
-    y_vals.append(y)
+    # Discard first 20 points (burn-in) to reach the attractor
+    if i >= 20:
+        x_vals.append(x)
+        y_vals.append(y)
 
-# Plot with color, better point size, and black background
-plt.figure(figsize=(6, 6), facecolor='black')
-plt.scatter(x_vals, y_vals, s=0.05, c='orangered', alpha=0.7, edgecolors='none')
+# Plot
+plt.figure(figsize=(8, 8), facecolor='black')
+# Use a colormap or single bright color. 'hot' colormap looks like fire.
+plt.scatter(x_vals, y_vals, s=0.2, c=range(len(x_vals)), cmap='magma', alpha=0.5, edgecolors='none')
 plt.axis('off')
 plt.tight_layout()
-plt.tight_layout()
 plt.savefig("flame_fractal.png", dpi=300, bbox_inches="tight", facecolor='black')
-plt.show()
+# plt.show() # Commented out to avoid blocking if run in automation, but user can uncomment
