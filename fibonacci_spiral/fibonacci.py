@@ -60,6 +60,8 @@ def plot_fibonacci_squares_and_spiral(n: int) -> None:
 
     ax.plot(x_spiral, y_spiral, color="black", linewidth=2)
 
+    # Save and show
+    plt.savefig("fibonacci_spiral.png", dpi=300, bbox_inches="tight")
     plt.show()
 
 plot_fibonacci_squares_and_spiral(10)
